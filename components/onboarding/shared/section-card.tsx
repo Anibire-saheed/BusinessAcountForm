@@ -10,10 +10,12 @@ export function SectionCard({
   title,
   description,
   children,
+  contentClassName,
 }: {
   title: string;
   description?: string;
   children: ReactNode;
+  contentClassName?: string;
 }) {
   return (
     <Card className="mb-5 gap-5">
@@ -23,7 +25,7 @@ export function SectionCard({
         </CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className={contentClassName}>{children}</CardContent>
     </Card>
   );
 }

@@ -8,7 +8,12 @@ import { reviewStatus } from "../lib/schemas/application/review-status";
 
 test("person status changes from missing to in progress to complete and back", () => {
   const app = emptyApplication("BN");
-  const status = () => reviewStatus(applicationChecks("BN", app)[2]);
+  const status = () =>
+    reviewStatus(
+      applicationChecks("BN", app).find((check) =>
+        check.label.startsWith("Admin officer 1"),
+      )!,
+    );
   assert.equal(status().status, "Missing");
   app.people.admin[0].email = "invalid";
   assert.deepEqual(status(), { status: "In progress", completed: 0, total: 8 });

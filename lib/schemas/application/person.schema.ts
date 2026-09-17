@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { optionalFile } from "./file.schema";
 export const personDraft = z.object({
+  isSignatory: z.boolean().optional(),
   name: z.string(),
   bvn: z.string(),
   nin: z.string(),

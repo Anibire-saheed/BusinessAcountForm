@@ -1,4 +1,9 @@
 "use client";
+import {
+  linkedSignatories,
+  signatoryEntries,
+  isEmptyPerson,
+} from "@/lib/schemas/application/checks";
 import { useId } from "react";
 import {
   Controller,
@@ -35,9 +40,18 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
   });
   const checkboxId = useId();
   const same = useWatch({ control, name: "same" });
+  const app = useWatch({ control }) as Application;
+  const linked = linkedSignatories(app);
+  const isSignatories = group.key === "signatories";
+  const canLink = ["directors", "proprietors", "trustees"].includes(group.key);
+  const totalSignatories = signatoryEntries(app).length;
   const groupError = formState.errors.people?.[group.key]?.root;
   return (
-    <SectionCard title={group.title} description={group.note}>
+    <SectionCard
+      title={group.title}
+      description={group.note}
+      contentClassName="[&>[data-first-person=true]]:pt-0"
+    >
       {group.sameAsAdmin && (
         <Controller
           control={control}
@@ -62,16 +76,62 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
           )}
         />
       )}
+      {isSignatories &&
+        linked.map((entry, index) => (
+          <div
+            key={entry.path}
+            data-first-person={index === 0}
+            className="space-y-3 rounded-[10px] border-b-4 border-black/10 bg-white p-[18px] min-[521px]:p-[30px]"
+          >
+            <h4 className="font-medium text-primary">
+              Signatory {index + 1} — {entry.label}
+            </h4>
+            <FieldDescription>
+              Linked automatically. Edit details and uploads in the{" "}
+              {entry.label.toLowerCase()} section, or turn off its signatory
+              toggle to unlink.
+            </FieldDescription>
+            <dl className={gridClass}>
+              {personFields.map(([key, label]) => (
+                <div key={key}>
+                  <dt className="text-xs text-muted-foreground">{label}</dt>
+                  <dd className="break-all">
+                    {entry.person[key] || "Not provided"}
+                  </dd>
+                </div>
+              ))}
+              {uploadFields.map(([key, label]) => (
+                <div key={key}>
+                  <dt className="text-xs text-muted-foreground">{label}</dt>
+                  <dd className="break-all">
+                    {entry.person[key]?.name || "Not attached"}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ))}
       {fields.map((person, index) => {
+        if (
+          isSignatories &&
+          linked.length &&
+          index === 0 &&
+          isEmptyPerson(app.people.signatories[0])
+        )
+          return null;
         const shared = group.key === "proprietors" && same && index === 0;
         return (
           <div
             key={person.id}
+            data-first-person={
+              index === 0 && (!isSignatories || linked.length === 0)
+            }
             className="space-y-4 rounded-[10px] border-b-4 border-[rgba(196,196,196,0.24)] bg-white p-[18px] min-[521px]:p-[30px]"
           >
             <div className="flex items-center justify-between gap-3">
               <h4 className="font-medium text-primary">
-                {personTitles[group.key]} {index + 1}
+                {personTitles[group.key]}{" "}
+                {index + 1 + (isSignatories ? linked.length : 0)}
               </h4>
               {fields.length > group.min && !shared && (
                 <Button
@@ -87,6 +147,33 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
                 </Button>
               )}
             </div>
+            {canLink && (
+              <Controller
+                control={control}
+                name={`people.${group.key}.${index}.isSignatory`}
+                render={({ field }) => (
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id={`${checkboxId}-${person.id}-signatory`}
+                      checked={!!field.value}
+                      disabled={!field.value && totalSignatories >= 6}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked);
+                        if (formState.isSubmitted) void trigger();
+                      }}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
+                      name={field.name}
+                    />
+                    <FieldLabel
+                      htmlFor={`${checkboxId}-${person.id}-signatory`}
+                    >
+                      Also a signatory (use these details and documents)
+                    </FieldLabel>
+                  </Field>
+                )}
+              />
+            )}
             {shared ? (
               <FieldDescription>
                 Uses the admin officer’s details and documents, including any
@@ -122,7 +209,9 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
         );
       })}
       {groupError && <FieldError errors={[groupError]} />}
-      {fields.length < group.max && (
+      {(isSignatories
+        ? totalSignatories < group.max
+        : fields.length < group.max) && (
         <Button
           type="button"
           variant="outline"

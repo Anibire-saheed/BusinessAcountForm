@@ -87,7 +87,10 @@ export function BusinessStructureSection({
                   id={`${groupId}-${key}-count`}
                   className="text-xs font-medium text-[#ad8536]"
                 >
-                  {[9, 7, 8][i]} requirements
+                  {REQUIREMENTS[key].documents.length +
+                    REQUIREMENTS[key].people.length +
+                    2}{" "}
+                  requirements
                 </div>
               </CardContent>
             </Card>

@@ -1,10 +1,10 @@
 import { REQUIREMENTS, type BusinessType } from "../../requirements";
 import { draftSchema } from "./draft.schema";
-import { applicationChecks } from "./checks";
+import { applicationChecks, effectivePeople } from "./checks";
 export function createApplicationSchema(type: BusinessType) {
   return draftSchema.superRefine((app, ctx) => {
     for (const group of REQUIREMENTS[type].people) {
-      const count = app.people[group.key]?.length || 0;
+      const count = effectivePeople(app, group.key).length;
       if (count < group.min || count > group.max)
         ctx.addIssue({
           code: "custom",

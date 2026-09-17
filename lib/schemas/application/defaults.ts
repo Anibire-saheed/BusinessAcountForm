@@ -2,6 +2,7 @@ import { REQUIREMENTS, type BusinessType } from "../../requirements";
 import type { Application } from "./draft.schema";
 import type { Person } from "./person.schema";
 export const emptyPerson = (): Person => ({
+  isSignatory: false,
   name: "",
   bvn: "",
   nin: "",
