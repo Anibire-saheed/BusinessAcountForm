@@ -34,3 +34,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## API setup
+
+React Query and Axios are configured for client-side API integration.
+
+1. Set `baseURL` directly in `lib/api/client.ts` to your backend URL (currently `/api`).
+2. Add request functions in `lib/api/services/` and hooks in `hooks/api/`.
+
+The shared Axios instance is exported from `@/lib/api`. Query defaults live in
+`lib/react-query.ts`; the provider is mounted in `app/layout.tsx`.
+No backend endpoints or live form submission are connected yet.
