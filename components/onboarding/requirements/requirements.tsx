@@ -10,7 +10,7 @@ export function RequirementsSection({ type }: { type: BusinessType }) {
   return (
     <section className={sectionClass} id={`step-form-${type}`}>
       <p className="mb-2.5 text-[13px] font-medium text-gold">Step 2</p>
-      <h2 className="mb-2.5 text-[27px] font-medium text-primary">
+      <h2 className="mb-2.5 text-[27px] leading-[1.2] font-medium text-primary">
         Requirements for a {req.name} account
       </h2>
       <p className="mb-[30px] text-[15px] text-muted-foreground">

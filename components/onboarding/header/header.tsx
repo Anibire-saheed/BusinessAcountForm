@@ -4,7 +4,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background">
       <div className="mx-auto w-full max-w-[760px] px-4 min-[521px]:px-[30px] flex items-center justify-between py-4">
-        <a className="inline-flex shrink-0" href="#">
+        {/* Offset the logo’s internal 19px transparent left margin. */}
+        <a className="-ml-[19px] inline-flex shrink-0" href="#">
           <Image
             src="/EhicaLogo.svg"
             alt="Ethica MFB"

@@ -4,12 +4,13 @@ export function SiteFooter() {
   return (
     <footer className="mt-5 border-t border-border pt-9 pb-[60px]">
       <div className="mx-auto w-full max-w-[760px] px-4 min-[521px]:px-[30px] flex flex-col gap-1.5">
+        {/* Offset the logo’s internal 19px transparent left margin. */}
         <Image
           src="/EhicaLogo.svg"
           alt="Ethica MFB"
           width={100}
           height={32}
-          className="mb-2 h-8 w-[100px]"
+          className="mb-2 -ml-[19px] h-8 w-[100px]"
         />
         <div className="text-sm">
           Questions about your application? Write to{" "}
