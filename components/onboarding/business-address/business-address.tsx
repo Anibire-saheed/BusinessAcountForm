@@ -6,11 +6,7 @@ export function BusinessAddressSection() {
       title="Business address"
       description="Registered or principal operating address."
     >
-      <TextField
-        name="address"
-        label="Business address"
-        placeholder="12 Adeola Odeku Street, Victoria Island, Lagos"
-      />
+      <TextField name="address" label="Business address" />
     </SectionCard>
   );
 }

@@ -39,8 +39,9 @@ export function FileField({
             className={
               layout !== "stacked"
                 ? "absolute inset-0 z-10 size-full cursor-pointer opacity-0"
-                : "bg-white px-3 py-2"
+                : `cursor-pointer bg-white px-3 py-2 ${file ? "file:hidden" : "text-transparent file:text-foreground"}`
             }
+            title={file?.name || "Choose file"}
             aria-invalid={fieldState.invalid}
             aria-describedby={
               [hint && `${id}-hint`, fieldState.error && `${id}-error`]
@@ -128,7 +129,7 @@ export function FileField({
                 <div className="flex shrink-0 items-center justify-between gap-2.5 min-[641px]:justify-end">
                   <span
                     className={`max-w-[120px] truncate text-[13px] ${file ? "text-primary" : "text-[#6b6558]"}`}
-                    title={file?.name}
+                    title={file?.name || "Choose file"}
                     aria-live="polite"
                   >
                     {file ? file.name : "Not attached"}
@@ -152,11 +153,6 @@ export function FileField({
               <FieldDescription id={`${id}-hint`}>{hint}</FieldDescription>
             )}
             {input}
-            {file && (
-              <p className="break-all text-xs text-primary">
-                Selected: {file.name}
-              </p>
-            )}
             {fieldState.error && (
               <FieldError id={`${id}-error`} errors={[fieldState.error]} />
             )}

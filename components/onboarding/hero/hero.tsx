@@ -16,7 +16,7 @@ export function HeroSection() {
         className="cursor-pointer text-[15px]"
         onClick={() => document.getElementById("step-type")?.scrollIntoView()}
       >
-        Start your application <span aria-hidden="true">→</span>
+        Start your application
       </Button>
       <div className="mt-7 grid grid-cols-[1.2fr_0.8fr_1.5fr] gap-2 border-t border-border pt-6 min-[521px]:flex min-[521px]:gap-[30px]">
         <div className="min-w-0 whitespace-nowrap text-[clamp(9px,2.5vw,11px)] leading-snug text-muted-foreground min-[521px]:text-[13px]">

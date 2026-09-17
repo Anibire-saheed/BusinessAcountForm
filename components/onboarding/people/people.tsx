@@ -107,13 +107,12 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
                     />
                   ))}
                 </div>
-                <div className="flex flex-wrap items-start gap-2.5">
+                <div className="grid min-w-0 grid-cols-1 gap-4">
                   {uploadFields.map(([key, label]) => (
                     <FileField
                       key={key}
                       name={`people.${group.key}.${index}.${key}`}
                       label={label}
-                      layout="compact"
                     />
                   ))}
                 </div>

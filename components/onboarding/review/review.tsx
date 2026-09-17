@@ -102,14 +102,6 @@ export function ReviewSection({
           </AlertDescription>
         </Alert>
       )}
-      <Alert className="mt-7 border-0 bg-gold-light">
-        <AlertDescription className="text-[12.5px]">
-          This is a working prototype. Entries and uploaded files stay in your
-          browser for this session only nothing is transmitted automatically. In
-          production, this step would upload everything securely to Ethica MFB
-          and notify our onboarding team.
-        </AlertDescription>
-      </Alert>
     </section>
   );
 }
