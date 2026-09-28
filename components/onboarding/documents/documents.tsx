@@ -1,7 +1,8 @@
-import { REQUIREMENTS, type BusinessType } from "@/lib/requirements";
-import { SectionCard } from "../shared/section-card";
-import { FileField } from "../shared/file-field";
-export function DocumentsSection({ type }: { type: BusinessType }) {
+import type { DocumentsSectionProps } from "@/types/onboardingProps.types";
+import { REQUIREMENTS } from "@/lib/requirements";
+import { SectionCard } from "@/components/ui/shared/section-card";
+import { FileField } from "@/components/ui/shared/file-field";
+export function DocumentsSection({ type }: DocumentsSectionProps) {
   const req = REQUIREMENTS[type];
   return (
     <SectionCard

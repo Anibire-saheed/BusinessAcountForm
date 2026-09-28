@@ -1,4 +1,5 @@
-import { QueryProvider } from "@/components/providers/query-provider";
+import type { ReactNode } from "react";
+import { Providers } from "@/app/provider";
 import type { Metadata } from "next";
 import "./fonts.css";
 import "./globals.css";
@@ -7,15 +8,11 @@ export const metadata: Metadata = {
   description:
     "Prepare your Ethica MFB business account application, documents, officer details and signatory information in one place.",
 };
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <QueryProvider>{children}</QueryProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

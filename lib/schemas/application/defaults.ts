@@ -30,6 +30,9 @@ export function emptyApplication(type: BusinessType): Application {
       email: "",
       phone: "",
     },
+    companyName: "",
+    rcNumber: "",
+    tin: "",
     address: "",
     same: false,
   };

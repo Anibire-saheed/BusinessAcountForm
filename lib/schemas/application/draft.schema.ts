@@ -6,7 +6,10 @@ export const draftSchema = z.object({
   documents: z.record(z.string(), optionalFile),
   people: z.record(z.string(), z.array(personDraft)),
   referee: refereeDraft,
+  companyName: z.string(),
+  rcNumber: z.string(),
+  tin: z.string(),
   address: z.string(),
   same: z.boolean(),
 });
-export type Application = z.infer<typeof draftSchema>;
+export type { Application } from "@/types/applicationForm.types";

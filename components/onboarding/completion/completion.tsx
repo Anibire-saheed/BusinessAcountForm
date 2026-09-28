@@ -1,15 +1,16 @@
 "use client";
+import type { CompletionSectionProps } from "@/types/onboardingProps.types";
 
-import { useFormContext, useWatch } from "react-hook-form";
+import { useApplicationValues } from "@/hooks/use-application-values";
+import { useFormContext } from "react-hook-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { applicationProgress } from "@/lib/schemas/application/progress";
 import type { Application } from "@/lib/schemas/application";
-import type { BusinessType } from "@/lib/requirements";
 
-export function CompletionSection({ type }: { type: BusinessType }) {
+export function CompletionSection({ type }: CompletionSectionProps) {
   const { control } = useFormContext<Application>();
-  const values = useWatch({ control }) as Application;
+  const values = useApplicationValues(control);
   const { percentage } = applicationProgress(type, values);
 
   return (

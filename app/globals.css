@@ -33,10 +33,13 @@
   a {
     @apply text-primary underline;
   }
-  button, a {
+  button,
+  a {
     @apply focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary;
   }
-  button, a, input {
+  button,
+  a,
+  input {
     -webkit-tap-highlight-color: transparent;
   }
 }

@@ -1,8 +1,6 @@
-import type { applicationChecks } from "./checks";
+import type { ApplicationCheck } from "@/types/applicationForm.types";
 
-type Check = ReturnType<typeof applicationChecks>[number];
-
-export function reviewStatus(check: Check) {
+export function reviewStatus(check: ApplicationCheck) {
   const total = check.fields.length;
   const completed = check.fields.filter(
     (field) => field.schema.safeParse(field.value).success,

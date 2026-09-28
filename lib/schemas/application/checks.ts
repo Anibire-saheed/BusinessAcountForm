@@ -4,6 +4,7 @@ import type { Person } from "./person.schema";
 import { fileSchema } from "./file.schema";
 import { textSchemas } from "./text.schema";
 import {
+  businessFields,
   personFields,
   personTitles,
   refereeFields,
@@ -56,6 +57,14 @@ export function effectivePeople(app: Application, key: string): Person[] {
 export function applicationChecks(type: BusinessType, app: Application) {
   const req = REQUIREMENTS[type];
   return [
+    {
+      label: "Business Details",
+      fields: businessFields.map(([key]) => ({
+        path: key,
+        schema: textSchemas[key],
+        value: app[key],
+      })),
+    },
     ...req.documents.map((d) => ({
       label: d.name,
       fields: [
@@ -90,12 +99,6 @@ export function applicationChecks(type: BusinessType, app: Application) {
         schema: textSchemas[key],
         value: app.referee[key],
       })),
-    },
-    {
-      label: "Business address",
-      fields: [
-        { path: "address", schema: textSchemas.address, value: app.address },
-      ],
     },
   ];
 }
