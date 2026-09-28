@@ -6,4 +6,4 @@ export const refereeDraft = z.object({
   email: z.string(),
   phone: z.string(),
 });
-export type Referee = z.infer<typeof refereeDraft>;
+export type { Referee } from "@/types/applicationForm.types";

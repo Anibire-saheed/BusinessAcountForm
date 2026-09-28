@@ -1,15 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useBusinessSelection } from "@/hooks/use-onboarding";
 import { BusinessStructureSection } from "../business-structure/business-structure";
 import { ApplicationForm } from "../application-form/application-form";
 import type { BusinessType } from "@/lib/requirements";
 
 export function ApplicationSection() {
-  const [type, setType] = useState<BusinessType | null>(null);
-  const [visited, setVisited] = useState<BusinessType[]>([]);
+  const { type, visited, selectType: selectBusiness } = useBusinessSelection();
   function selectType(next: BusinessType) {
-    setType(next);
-    setVisited((old) => (old.includes(next) ? old : [...old, next]));
+    selectBusiness(next);
     setTimeout(
       () => document.getElementById(`step-form-${next}`)?.scrollIntoView(),
       50,

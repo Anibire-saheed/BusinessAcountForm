@@ -1,3 +1,4 @@
+import { businessFields } from "@/lib/schemas/application/fields";
 import { REQUIREMENTS, type BusinessType } from "@/lib/requirements";
 import {
   effectivePeople,
@@ -6,11 +7,20 @@ import {
   refereeFields,
   type Application,
 } from "@/lib/schemas/application";
-export function downloadSummary(type: BusinessType, app: Application) {
+export function downloadSummary(
+  type: BusinessType,
+  app: Application,
+  submittedUUID?: string,
+) {
   const req = REQUIREMENTS[type];
   const lines = [
     "Ethica MFB — Business Account Opening Summary",
     `Account type: ${req.name} (${type})`,
+    "",
+    "Business Details:",
+    ...businessFields.map(
+      ([key, label]) => `${label}: ${app[key] || "Missing"}`,
+    ),
     "",
     "Documents:",
     ...req.documents.map(
@@ -36,9 +46,9 @@ export function downloadSummary(type: BusinessType, app: Application) {
       ([key, label]) => `${label}: ${app.referee[key] || "Missing"}`,
     ),
     "",
-    `Business address: ${app.address || "Missing"}`,
-    "",
-    "Prepared locally. This application has not been submitted.",
+    submittedUUID
+      ? `Submitted application reference: ${submittedUUID}`
+      : "Local draft. This application has not been submitted.",
   );
   const url = URL.createObjectURL(
     new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" }),

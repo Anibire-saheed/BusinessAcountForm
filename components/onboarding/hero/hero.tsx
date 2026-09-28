@@ -18,26 +18,6 @@ export function HeroSection() {
       >
         Start your application
       </Button>
-      <div className="mt-7 grid grid-cols-[1.2fr_0.8fr_1.5fr] gap-2 border-t border-border pt-6 min-[521px]:flex min-[521px]:gap-[30px]">
-        <div className="min-w-0 whitespace-nowrap text-[clamp(9px,2.5vw,11px)] leading-snug text-muted-foreground min-[521px]:text-[13px]">
-          <strong className="mb-0.5 block font-sans text-[18px] font-medium text-primary min-[521px]:text-[22px]">
-            3
-          </strong>
-          business structures
-        </div>
-        <div className="min-w-0 whitespace-nowrap text-[clamp(9px,2.5vw,11px)] leading-snug text-muted-foreground min-[521px]:text-[13px]">
-          <strong className="mb-0.5 block font-sans text-[18px] font-medium text-primary min-[521px]:text-[22px]">
-            ~15 min
-          </strong>
-          to complete
-        </div>
-        <div className="min-w-0 whitespace-nowrap text-[clamp(9px,2.5vw,11px)] leading-snug text-muted-foreground min-[521px]:text-[13px]">
-          <strong className="mb-0.5 block font-sans text-[18px] font-medium text-primary min-[521px]:text-[22px]">
-            1
-          </strong>
-          page, no account needed
-        </div>
-      </div>
     </section>
   );
 }

@@ -1,20 +1,13 @@
-export type BusinessType = "RC" | "BN" | "IT";
-export type PeopleGroup = {
-  key: string;
-  title: string;
-  min: number;
-  max: number;
-  note?: string;
-  sameAsAdmin?: boolean;
-};
-export type Requirement = {
-  name: string;
-  subtitle: string;
-  documents: { id: string; name: string; hint: string }[];
-  people: PeopleGroup[];
-  referee: { label: string; note: string };
-  address: boolean;
-};
+import type {
+  BusinessType,
+  Requirement,
+} from "@/types/businessRequirements.types";
+export type {
+  BusinessType,
+  PeopleGroup,
+  Requirement,
+} from "@/types/businessRequirements.types";
+
 export const REQUIREMENTS: Record<BusinessType, Requirement> = {
   RC: {
     name: "Registered company",
@@ -39,11 +32,6 @@ export const REQUIREMENTS: Record<BusinessType, Requirement> = {
         id: "boardres",
         name: "Board Resolution",
         hint: "Stating the account signatories",
-      },
-      {
-        id: "tin",
-        name: "Tax Identification Number (TIN)",
-        hint: "Company TIN certificate",
       },
     ],
     people: [
@@ -76,11 +64,6 @@ export const REQUIREMENTS: Record<BusinessType, Requirement> = {
         id: "statusReport",
         name: "CAC Status Report",
         hint: "Issued within the last 6 months",
-      },
-      {
-        id: "tin",
-        name: "Tax Identification Number (TIN)",
-        hint: "Business TIN certificate",
       },
     ],
     people: [
@@ -119,11 +102,6 @@ export const REQUIREMENTS: Record<BusinessType, Requirement> = {
         id: "boardres",
         name: "Board Resolution",
         hint: "Stating the account signatories",
-      },
-      {
-        id: "tin",
-        name: "Tax Identification Number (TIN)",
-        hint: "Organisation TIN certificate",
       },
     ],
     people: [

@@ -1,15 +1,13 @@
 "use client";
+import type { BusinessStructureSectionProps } from "@/types/onboardingProps.types";
 import { useId } from "react";
 import { Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { REQUIREMENTS, type BusinessType } from "@/lib/requirements";
+import { REQUIREMENTS } from "@/lib/requirements";
 export function BusinessStructureSection({
   type,
   onSelect,
-}: {
-  type: BusinessType | null;
-  onSelect: (type: BusinessType) => void;
-}) {
+}: BusinessStructureSectionProps) {
   const groupId = useId();
   return (
     <section

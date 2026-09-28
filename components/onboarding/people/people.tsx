@@ -1,16 +1,9 @@
 "use client";
-import {
-  linkedSignatories,
-  signatoryEntries,
-  isEmptyPerson,
-} from "@/lib/schemas/application/checks";
+import type { PeopleSectionProps } from "@/types/onboardingProps.types";
+import { isEmptyPerson } from "@/lib/schemas/application/checks";
 import { useId } from "react";
-import {
-  Controller,
-  useFormContext,
-  useFieldArray,
-  useWatch,
-} from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { usePeopleGroup } from "@/hooks/use-people-group";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,27 +18,40 @@ import {
   personFields,
   personTitles,
   uploadFields,
-  type Application,
 } from "@/lib/schemas/application";
-import type { PeopleGroup } from "@/lib/requirements";
-import { SectionCard } from "../shared/section-card";
-import { TextField } from "../shared/text-field";
-import { FileField } from "../shared/file-field";
-import { gridClass } from "../shared/styles";
-export function PeopleSection({ group }: { group: PeopleGroup }) {
-  const { control, formState, trigger } = useFormContext<Application>();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: `people.${group.key}`,
+import { useAppSelector } from "@/store/hooks";
+import { SectionCard } from "@/components/ui/shared/section-card";
+import { TextField } from "@/components/ui/shared/text-field";
+import { FileField } from "@/components/ui/shared/file-field";
+import { gridClass } from "@/components/ui/shared/styles";
+export function PeopleSection({ group, type }: PeopleSectionProps) {
+  const saved = useAppSelector((state) => {
+    const session = state.onboarding.sessions[type];
+    const ids =
+      group.key === "signatories"
+        ? session?.signatoryIds
+        : session?.principalIds;
+    return (
+      !!session?.pendingWrite ||
+      Object.keys(ids ?? {}).some((key) => key.startsWith(`${group.key}.`))
+    );
   });
   const checkboxId = useId();
-  const same = useWatch({ control, name: "same" });
-  const app = useWatch({ control }) as Application;
-  const linked = linkedSignatories(app);
-  const isSignatories = group.key === "signatories";
-  const canLink = ["directors", "proprietors", "trustees"].includes(group.key);
-  const totalSignatories = signatoryEntries(app).length;
-  const groupError = formState.errors.people?.[group.key]?.root;
+  const {
+    control,
+    formState,
+    trigger,
+    fields,
+    append,
+    remove,
+    same,
+    app,
+    linked,
+    isSignatories,
+    canLink,
+    totalSignatories,
+    groupError,
+  } = usePeopleGroup(group);
   return (
     <SectionCard
       title={group.title}
@@ -63,6 +69,7 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
                 name={field.name}
                 ref={field.ref}
                 checked={field.value}
+                disabled={saved}
                 onBlur={field.onBlur}
                 onCheckedChange={(checked) => {
                   field.onChange(checked);
@@ -133,7 +140,7 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
                 {personTitles[group.key]}{" "}
                 {index + 1 + (isSignatories ? linked.length : 0)}
               </h4>
-              {fields.length > group.min && !shared && (
+              {fields.length > group.min && !shared && !saved && (
                 <Button
                   type="button"
                   variant="ghost"
@@ -156,7 +163,9 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
                     <Checkbox
                       id={`${checkboxId}-${person.id}-signatory`}
                       checked={!!field.value}
-                      disabled={!field.value && totalSignatories >= 6}
+                      disabled={
+                        saved || (!field.value && totalSignatories >= 6)
+                      }
                       onCheckedChange={(checked) => {
                         field.onChange(checked);
                         if (formState.isSubmitted) void trigger();
@@ -208,6 +217,12 @@ export function PeopleSection({ group }: { group: PeopleGroup }) {
           </div>
         );
       })}
+      {saved && (
+        <p className="mt-3 text-sm text-muted-foreground">
+          People already saved cannot be removed or relinked here. Contact the
+          bank if those relationships need changing.
+        </p>
+      )}
       {groupError && <FieldError errors={[groupError]} />}
       {(isSignatories
         ? totalSignatories < group.max

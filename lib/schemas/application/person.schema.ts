@@ -11,4 +11,4 @@ export const personDraft = z.object({
   validId: optionalFile,
   signature: optionalFile,
 });
-export type Person = z.infer<typeof personDraft>;
+export type { Person } from "@/types/applicationForm.types";

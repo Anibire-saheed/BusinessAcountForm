@@ -1,9 +1,10 @@
-import { REQUIREMENTS, type BusinessType } from "@/lib/requirements";
+import type { RefereeSectionProps } from "@/types/onboardingProps.types";
+import { REQUIREMENTS } from "@/lib/requirements";
 import { refereeFields } from "@/lib/schemas/application";
-import { SectionCard } from "../shared/section-card";
-import { TextField } from "../shared/text-field";
-import { gridClass } from "../shared/styles";
-export function RefereeSection({ type }: { type: BusinessType }) {
+import { SectionCard } from "@/components/ui/shared/section-card";
+import { TextField } from "@/components/ui/shared/text-field";
+import { gridClass } from "@/components/ui/shared/styles";
+export function RefereeSection({ type }: RefereeSectionProps) {
   const req = REQUIREMENTS[type];
   return (
     <SectionCard title="Referee" description={req.referee.note}>

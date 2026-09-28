@@ -1,27 +1,31 @@
 "use client";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useApplicationValues } from "@/hooks/use-application-values";
+import { useFormContext } from "react-hook-form";
+import { apiErrorMessage } from "@/app/apiService/apiResponseHandler";
 import { CheckCircle2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { applicationChecks, type Application } from "@/lib/schemas/application";
 import { reviewStatus } from "@/lib/schemas/application/review-status";
-import type { BusinessType } from "@/lib/requirements";
-import { sectionClass } from "../shared/styles";
+import { sectionClass } from "@/components/ui/shared/styles";
 import { downloadSummary } from "./download-summary";
-type ReviewProps = {
-  type: BusinessType;
-  complete: boolean;
-  prepared: boolean;
-  confirmationId: string;
-};
+import type { ReviewProps } from "@/types/onboardingProps.types";
 export function ReviewSection({
   type,
   complete,
-  prepared,
+  confirmed,
+  onConfirm,
+  submitted,
+  locked,
+  pending,
+  step,
+  applicationUUID,
+  error,
+  createUncertain,
   confirmationId,
 }: ReviewProps) {
   const form = useFormContext<Application>();
-  const values = useWatch({ control: form.control }) as Application;
+  const values = useApplicationValues(form.control);
   const checks = applicationChecks(type, values);
   return (
     <section className={sectionClass}>
@@ -30,8 +34,8 @@ export function ReviewSection({
         Review and submit
       </h2>
       <p className="mb-[30px] text-[15px] text-muted-foreground">
-        Check that everything below is filled in. This preview prepares your
-        application summary; nothing is sent to the bank.
+        Review your information and documents, confirm their accuracy, then
+        submit your application to the bank.
       </p>
       <ul>
         {checks.map((check, index) => {
@@ -67,27 +71,77 @@ export function ReviewSection({
           </AlertDescription>
         </Alert>
       )}
+      {applicationUUID && (
+        <p className="mt-4 break-all text-sm">
+          Application reference: {applicationUUID}
+        </p>
+      )}
+      <label className="mt-6 flex items-start gap-3 text-sm">
+        <input
+          type="checkbox"
+          checked={confirmed}
+          disabled={locked}
+          onChange={(event) => {
+            onConfirm(event.target.checked);
+            form.clearErrors("root.confirmation");
+          }}
+          className="mt-1"
+        />
+        I confirm that the information and documents provided are accurate.
+      </label>
+      {form.formState.errors.root?.confirmation && (
+        <p role="alert" className="mt-2 text-sm text-destructive">
+          {form.formState.errors.root.confirmation.message}
+        </p>
+      )}
+      {error && !submitted && (
+        <Alert variant="destructive" className="mt-4">
+          <AlertTitle>Submission needs attention</AlertTitle>
+          <AlertDescription>{apiErrorMessage(error)}</AlertDescription>
+        </Alert>
+      )}
+      {createUncertain && (
+        <p role="alert" className="mt-3 text-sm text-destructive">
+          We could not verify whether your application was created. Contact
+          business@ethicamfb.com before starting another application.
+        </p>
+      )}
+      {pending && (
+        <p role="status" className="mt-4 text-sm">
+          {step || "Submitting…"} Keep this page open.
+        </p>
+      )}
       <div className="mt-6 flex flex-wrap gap-3 max-[520px]:[&>button]:w-full">
         <Button
           type="submit"
           size="lg"
 
-          disabled={form.formState.isSubmitting}
+          disabled={locked || form.formState.isSubmitting}
         >
-          Submit Application
+          {pending
+            ? "Submitting…"
+            : submitted
+              ? "Submitted"
+              : "Submit Application"}
         </Button>
         <Button
           type="button"
           variant="outline"
           size="lg"
 
-          onClick={() => downloadSummary(type, form.getValues())}
+          onClick={() =>
+            downloadSummary(
+              type,
+              form.getValues(),
+              submitted ? applicationUUID : undefined,
+            )
+          }
         >
           <Download />
           Download summary (.txt)
         </Button>
       </div>
-      {prepared && complete && (
+      {submitted && (
         <Alert
           id={confirmationId}
           tabIndex={-1}
@@ -95,10 +149,10 @@ export function ReviewSection({
           className="mt-5 bg-success-light"
         >
           <CheckCircle2 />
-          <AlertTitle>Application prepared</AlertTitle>
+          <AlertTitle>Application received</AlertTitle>
           <AlertDescription>
-            Your application is complete and ready to download. It has not been
-            submitted. Contact business@ethicamfb.com for the next steps.
+            Your application has been sent to the bank. Keep your application
+            reference for follow-up.
           </AlertDescription>
         </Alert>
       )}
